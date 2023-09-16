@@ -2,7 +2,6 @@ import os
 import re
 import tempfile
 
-from pydub import AudioSegment
 from google.cloud import texttospeech
 from replacements import text_rules, math_rules
 
@@ -160,21 +159,15 @@ def merge_mp3_files(out_path, mp3_file_list):
 
     # merge saved mp3 files
     print("Started merging mp3 files...")
-    merged_mp3 = None
-    for mp3_file in mp3_file_list:
-        with open(mp3_file, "rb") as f:
-            mp3_data = AudioSegment.from_file(f, format="mp3")
-            if merged_mp3:
-                merged_mp3 += mp3_data
-            else:
-                merged_mp3 = mp3_data
 
     # save the merged mp3 file
     merged_mp3_file_name = (
         re.sub("-[0-9]+.mp3", ".mp3", os.path.basename(mp3_file_list[0]))
     )  # 'foo-101' -> 'foo.mp3'
     with open(os.path.join(out_path, merged_mp3_file_name), "wb") as out:
-        merged_mp3.export(out, format="mp3")
+        for mp3_file in mp3_file_list:
+            with open(mp3_file, "rb") as mp3:
+                out.write(mp3.read())
 
     # delete mp3 files
     for mp3_file in mp3_file_list:

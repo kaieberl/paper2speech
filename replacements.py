@@ -11,7 +11,7 @@ text_rules = [
     ("w\.r\.t", 'with respect to'),
     ("w\.l\.o\.g\.", 'without loss of generality'),
     ("tanh", 'tan <say as interpret-as="characters">h</say>'),
-    (r"\(.*?\)-th", r"\1-th"),
+    (r"\((.*?)\)-th", r"\1-th"),
 ]
 
 math_rules = [
