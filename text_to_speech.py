@@ -15,14 +15,6 @@ os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = os.path.join(PROJECT_DIR, "textto
 
 speech_client = texttospeech.TextToSpeechClient()
 
-voice_map = {
-    'en': ('en-GB', 'en-GB-Neural2-B'),
-    # 'en': ('en-US', 'en-US-Neural2-J'),
-    'de': ('de-DE', 'de-DE-Neural2-B'),
-    'ja': ('ja-JP', 'ja-JP-Neural2-C')
-}
-language = 'en'
-
 
 def replace_nested(expr, rules):
     """
@@ -87,9 +79,13 @@ def generate_mp3_files(md_filename: str):
             # add SSML tags
             # if header, e.g. # Introduction, ## Related Work, ###### Abstract
             footnote = re.match(r"^(.*)Footnote [0-9]+:.*", line)
+            inline_header = re.match(r"\*\*(.*?)\*\*\s*([A-Z])", line)
             if re.match(r"^#{1,6} .*", line):
                 line = re.sub(r"^#{1,6} ", "", line)
                 ssml += section_break + "<p>" + line + "</p>" + section_break + "\n"
+            elif inline_header:
+                ssml += section_break + "<p>" + inline_header.group(1) + "</p>" + section_break + "\n"
+                ssml += "<p>" + inline_header.group(2) + "</p>\n"
             # remove table environment
             elif re.match(r"^\\begin{table}", line):
                 table_flag = True
@@ -107,7 +103,7 @@ def generate_mp3_files(md_filename: str):
                 ssml += footnote.group(1) + "\n"
             # equation block
             elif re.match(r"^\\\[.*\\\]", line):
-                continue
+                ssml += section_break
             # normal paragraph
             else:
                 ssml += "<p>" + line + "</p>\n"
@@ -130,8 +126,8 @@ def generate_mp3_for_ssml(out_path, filename, ssml):
     ssml = "<speak>\n" + ssml + "</speak>\n"
     synthesis_input = texttospeech.SynthesisInput(ssml=ssml)
     voice = texttospeech.VoiceSelectionParams(
-        language_code=voice_map[language][0],
-        name=voice_map[language][1],
+        language_code='en-GB',
+        name='en-GB-Neural2-B',
     )
     audio_config = texttospeech.AudioConfig(
         audio_encoding=texttospeech.AudioEncoding.MP3,
@@ -146,8 +142,8 @@ def generate_mp3_for_ssml(out_path, filename, ssml):
     except Exception as e:
         print("Retrying speech generation with WaveNet...")
         voice = texttospeech.VoiceSelectionParams(
-            language_code=voice_map[language][0],
-            name=voice_map[language][1].replace('Neural2', 'Wavenet'),
+            language_code='en-GB',
+            name='en-GB-Wavenet-B',
         )
         response = speech_client.synthesize_speech(
             request={"input": synthesis_input, "voice": voice, "audio_config": audio_config}
