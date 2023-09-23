@@ -11,7 +11,7 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     out_path = args.output_path or os.path.dirname(args.input_file)
-    os.system('nougat {} -o {}'.format(args.input_file, out_path))
+    # os.system('nougat "{}" -o "{}" -m 0.1.0-base'.format(args.input_file, out_path))
 
     mp3_list = generate_mp3_files(os.path.join(out_path, os.path.basename(args.input_file).replace('.pdf', '.mmd')))
     merge_mp3_files(out_path, mp3_list)

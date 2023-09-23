@@ -12,7 +12,7 @@ This script uses the Meta [Nougat](https://facebookresearch.github.io/nougat/) p
 - pause before and after headings
 - skip references like \[1\], \[1, 2\], \[1-3\]
 - spell out abbreviations like e.g., i.e., w.r.t., Fig., Eq.
-- read out inline math
+- read out inline math (work in progress)
 - do not read out block math, instead pause
 - do not read out table contents
 - read out figure, table captions
@@ -47,4 +47,6 @@ python3 ~/path/to/paper2speech/main.py $1
 - only works for English
 
 ## Future Work
-- read out figure caption after referenced in text
+- write proper parser for inline math
+- read out figure caption before referenced in text
+- add chapters to output audio file
