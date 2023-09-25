@@ -11,14 +11,20 @@ text_rules = [
     ("w\.r\.t", 'with respect to'),
     ("w\.l\.o\.g\.", 'without loss of generality'),
     ("tanh", 'tan <say as interpret-as="characters">h</say>'),
+    ("NVIDIA", '<say as interpret-as="characters">N</say>vidia'),
     (r"\((.*?)\)-th", r"\1-th"),
     # remove numbers after sentences, e.g. ... of training.4
-    (r'(\w+)\.(\d+)', r'\1'),
+    (r'(\w+)\.(\d+)$', r'\1'),
+    # add break after title number
+    (r'(#+\s+\d+)\s+', r'\1<break time="0.5s"/>'),
 ]
 
 math_rules = [
+    (r'\\,', ''),
     (r"\-", ' minus '),
     (r"\+", ' plus '),
+    (r'\((\w+)\|([\w,]+)\)', r" of \1 given \2 "),
+    (r'(?<!^)\(([^)]+)\)', r" of \1 "),
     (r"\\mathcal{N}\((.*?),(.*?)\)", r" normal distribution with mean \1 and variance \2 "),
     (r"\\mathbb{N}\^{(.*?)}", r" N \1 "),
     (r"\\mathbb{R}\^{(.*?)}", r" R \1 "),
@@ -43,7 +49,7 @@ math_rules = [
     (r"\^\{-(.*?)\}", r" to the minus \1 "),
     (r"\^\{(.*?)\}", r" to the \1 "),
     (r"\^", r" to the "),
-    (r"_\{(.*?)\}", r" \1 "),
+    (r"_\{(.*?)\}", r" sub \1 "),
     (r"\\cdot", r" dot "),
     (r"\\in", r" in "),
     (r"\\hat{(.*?)}", r" \1 hat "),
@@ -94,5 +100,8 @@ math_rules = [
     (r"\\psi", r" psi "),
     (r"\\omega", r" omega "),
     (r"\\Gamma", r" Gamma "),
+    (r",", r" "),
+    (r"\{(.*?)\}", r"\1"),
+    (r"  ", r" "),
     # ... Add more as required
 ]

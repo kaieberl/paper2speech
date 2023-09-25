@@ -76,7 +76,7 @@ def generate_mp3_files(md_filename: str):
 
             # split as chunks with <4500 bytes each
             if len(ssml.encode("utf-8")) + len(line.encode("utf-8")) > 4500:
-                filename = f'{os.path.basename(md_filename)[:4]}-{id}.mp3'
+                filename = f'{os.path.basename(md_filename)[:-4]}-{id}.mp3'
                 mp3_file = generate_mp3_for_ssml(temp_path, filename, ssml)
                 mp3_file_list.append(mp3_file)
                 ssml = ""
@@ -126,7 +126,7 @@ def generate_mp3_files(md_filename: str):
 
         # generate speech for the remaining
         if ssml:
-            filename = f'{os.path.basename(md_filename)}-{id}.mp3'
+            filename = f'{os.path.basename(md_filename)[:-4]}-{id}.mp3'
             mp3_file = generate_mp3_for_ssml(temp_path, filename, ssml)
             mp3_file_list.append(mp3_file)
     return mp3_file_list
