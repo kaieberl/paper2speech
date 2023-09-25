@@ -12,11 +12,19 @@ text_rules = [
     ("w\.l\.o\.g\.", 'without loss of generality'),
     ("tanh", 'tan <say as interpret-as="characters">h</say>'),
     (r"\((.*?)\)-th", r"\1-th"),
+    # remove numbers after sentences, e.g. ... of training.4
+    (r'(\w+)\.(\d+)', r'\1'),
 ]
 
 math_rules = [
+    (r"\-", ' minus '),
+    (r"\+", ' plus '),
+    (r"\\mathcal{N}\((.*?),(.*?)\)", r" normal distribution with mean \1 and variance \2 "),
+    (r"\\mathbb{N}\^{(.*?)}", r" N \1 "),
     (r"\\mathbb{R}\^{(.*?)}", r" R \1 "),
     (r"\\mathbb{C}\^{(.*?)}", r" C \1 "),
+    (r"\\mathbb{Z}\^{(.*?)}", r" Z \1 "),
+    (r"N\^{(.*?)}", r" N \1 "),
     (r"R\^{(.*?)}", r" R \1 "),
     (r"C\^{(.*?)}", r" C \1 "),
     (r"\\int_{(.*?)}\^{(.*?)}", r" integral from \1 to \2 of "),
@@ -69,6 +77,7 @@ math_rules = [
     (r"\\gamma", r" gamma "),
     (r"\\delta", r" delta "),
     (r"\\epsilon", r" epsilon "),
+    (r"\\varepsilon", r" epsilon "),
     (r"\\eta", r" eta "),
     (r"\\theta", r" theta "),
     (r"\\kappa", r" kappa "),
@@ -80,6 +89,7 @@ math_rules = [
     (r"\\sigma", r" sigma "),
     (r"\\tau", r" tau "),
     (r"\\phi", r" phi "),
+    (r"\\varphi", r" phi "),
     (r"\\chi", r" chi "),
     (r"\\psi", r" psi "),
     (r"\\omega", r" omega "),

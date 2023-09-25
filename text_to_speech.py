@@ -23,10 +23,13 @@ def replace_nested(expr, rules):
     while changed:
         changed = False
         for pattern, replacement in rules:
-            new_expr, replacements_made = re.subn(pattern, replacement, expr)
-            if replacements_made > 0:
-                changed = True
-                expr = new_expr
+            try:
+                new_expr, replacements_made = re.subn(pattern, replacement, expr)
+                if replacements_made > 0:
+                    changed = True
+                    expr = new_expr
+            except re.error as e:
+                print(f"Invalid pattern: {pattern}. Error: {e}")
     return expr
 
 
@@ -49,12 +52,23 @@ def generate_mp3_files(md_filename: str):
     table_flag = False
     with open(md_filename, "r") as md_file:
         for id, line in enumerate(md_file.readlines()):
-            # remove reference numbers, e.g. [1], [2, 3], [1-3] including preceding spaces
-            line = re.sub(r"\s*\[[0-9,-, ]+\]\s*", "", line)
+            # remove URLs
+            line = re.sub("https?://[\w/:%#\$&\?\(\)~\.=\+\-]+", "", line)
 
+            # remove reference numbers, e.g. [1], (2, 3), [1-3] including preceding spaces
+            line = re.sub(r"\s*(\[[0-9,-, ]+\]|\([0-9,-, ]+\))\s*", '', line)
+            # remove citations in square brackets, e.g. [Feynman et al., 1965], [Martius and Lampert, 2016], [Zaremba et al., 2014, Kusner et al., 2017, Li et al., 2019, Lample and Charton, 2020]
+            line = re.sub(r'\s*\[[^\]]*, \d{4}(?:, [^\]]*, \d{4})*\]', '', line)
+            # remove citations in round brackets, e.g. (Welinder et al., 2010), (Kingma and Ba, 2014), (Reed et al., 2016a; Li et al., 2019; Koh et al., 2021),
+            # (Zaremba et al., 2014, Kusner et al., 2017, Li et al., 2019, Lample and Charton, 2020), (Zhang et al., 2017; 2018)
+            line = re.sub(r'\s*\([^\)]*, \d{4}(?:[;,] [^\)]*, \d{4}[a-zA-Z]*?)*\)', '', line)
+            # remove year in embedded citations with et al., e.g. Nguyen et al. (2017), Garc ́ıa et al. [1989]
+            line = re.sub(r'\s*(\b\w+\s+et al\.) (\[\d{4}\]|\(\d{4}\))', r'\1', line)
             # remove Markdown syntax
             line = re.sub(r"\*\*(.*?)\*\*", r"\1", line)  # bold
             line = re.sub(r"_(.*?)_", r"\1", line)  # italic
+            # remove * bullet points
+            line = re.sub(r"^\* ", "", line)
 
             # make replacements defined in replacements.py
             for pattern, replacement in text_rules:
@@ -76,8 +90,7 @@ def generate_mp3_files(md_filename: str):
                     continue
 
             # add SSML tags
-            # if header, e.g. # Introduction, ## Related Work, ###### Abstract
-            footnote = re.match(r"^(.*)Footnote [0-9]+:.*", line)
+            inline_footnote = re.match(r"^(.*)Footnote [0-9]+:.*", line)
             inline_header = re.match(r"\*\*(.*?)\*\*\s*([A-Z])", line)
             if re.match(r"^#{1,6} .*", line):
                 line = re.sub(r"^#{1,6} ", "", line)
@@ -98,8 +111,8 @@ def generate_mp3_files(md_filename: str):
             elif re.match(r"^Figure [0-9]+:", line) or re.match(r"^Table [0-9]+:", line):
                 ssml += caption_break + line + caption_break + "\n"
             # footnote in the middle of a paragraph
-            elif footnote:
-                ssml += footnote.group(1) + "\n"
+            elif inline_footnote:
+                ssml += inline_footnote.group(1) + "\n"
             # equation block
             elif re.match(r"^\\\[.*\\\]", line):
                 ssml += section_break
@@ -113,7 +126,7 @@ def generate_mp3_files(md_filename: str):
 
         # generate speech for the remaining
         if ssml:
-            filename = f'{os.path.basename(md_filename)[:4]}-{id}.mp3'
+            filename = f'{os.path.basename(md_filename)}-{id}.mp3'
             mp3_file = generate_mp3_for_ssml(temp_path, filename, ssml)
             mp3_file_list.append(mp3_file)
     return mp3_file_list
