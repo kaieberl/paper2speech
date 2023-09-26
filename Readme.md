@@ -30,6 +30,24 @@ TLDR: On [https://cloud.google.com](https://cloud.google.com), create a new proj
 The resulting json file should be downloaded automatically.
 Google TTS is free for the first 1 million characters per month, then $4 per 1 million characters.
 
+You can customize the voice in the definition of the `voice` variable.
+```python3
+voice = texttospeech.VoiceSelectionParams(
+    language_code='en-GB',
+    name='en-GB-Neural2-B',
+)
+```
+Go to [https://cloud.google.com/text-to-speech](https://cloud.google.com/text-to-speech) to try out different voices and languages. Below the text box, there is a button to show the json request.
+E.g. to use an American english voice, replace `'en': ('en-GB', 'en-GB-Neural2-B'),` by `'en': ('en-US', 'en-US-Neural2-J'),`.
+Also change the fallback Wavenet voice to the same voice a few lines further down:
+```python3
+voice = texttospeech.VoiceSelectionParams(
+    language_code='en-GB',
+    name='en-GB-Wavenet-B',
+)
+```
+This voice is used if the Neural voice returns an error, e.g. because a sentence is too long.
+
 On macOS, you can create a shortcut in the Finder with the following steps:
 1. in Automator, create a new Quick Action. 
 2. At the top, choose input as "PDF files" in "Finder". 
@@ -43,7 +61,7 @@ python3 ~/path/to/paper2speech/main.py $1
 5. save the action and give it a name, e.g. "Paper2Speech"
 
 ## Limitations
-- captions of tables, figures are always read at the end
+- captions of tables, figures are always read at the end of the page (because of the way Nougat has been trained)
 - only works for English
 
 ## Future Work
