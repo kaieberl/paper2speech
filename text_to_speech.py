@@ -52,27 +52,7 @@ def generate_mp3_files(md_filename: str):
     table_flag = False
     with open(md_filename, "r") as md_file:
         for id, line in enumerate(md_file.readlines()):
-            # remove URLs
-            line = re.sub("https?://[\w/:%#\$&\?\(\)~\.=\+\-]+", "", line)
-
-            # remove reference numbers, e.g. [1], (2, 3), [1-3] including preceding spaces
-            line = re.sub(r"\s*(\[[0-9,-, ]+\]|\([0-9,-, ]+\))\s*", '', line)
-            # remove citations in square brackets, e.g. [Feynman et al., 1965], [Martius and Lampert, 2016], [Zaremba et al., 2014, Kusner et al., 2017, Li et al., 2019, Lample and Charton, 2020]
-            line = re.sub(r'\s*\[[^\]]*, \d{4}(?:, [^\]]*, \d{4})*\]', '', line)
-            # remove citations in round brackets, e.g. (Welinder et al., 2010), (Kingma and Ba, 2014), (Reed et al., 2016a; Li et al., 2019; Koh et al., 2021),
-            # (Zaremba et al., 2014, Kusner et al., 2017, Li et al., 2019, Lample and Charton, 2020), (Zhang et al., 2017; 2018)
-            line = re.sub(r'\s*\([^\)]*, \d{4}(?:[;,] [^\)]*, \d{4}[a-zA-Z]*?)*\)', '', line)
-            # remove year in embedded citations with et al., e.g. Nguyen et al. (2017), Garc ́ıa et al. [1989]
-            line = re.sub(r'\s*(\b\w+\s+et al\.) (\[\d{4}\]|\(\d{4}\))', r'\1', line)
-            # remove Markdown syntax
-            line = re.sub(r"\*\*(.*?)\*\*", r"\1", line)  # bold
-            line = re.sub(r"_(.*?)_", r"\1", line)  # italic
-            # remove * bullet points
-            line = re.sub(r"^\* ", "", line)
-
-            # make replacements defined in replacements.py
-            for pattern, replacement in text_rules:
-                line = re.sub(pattern, replacement, line)
+            line = process_line(line)
 
             # split as chunks with <4500 bytes each
             if len(ssml.encode("utf-8")) + len(line.encode("utf-8")) > 4500:
