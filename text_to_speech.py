@@ -65,6 +65,7 @@ def remove_markdown_syntax(line: str) -> str:
     line = re.sub(r"_(.*?)_", r"\1", line)  # italic
     # remove * bullet points
     line = re.sub(r"^\* ", "", line)
+    line = re.sub(r'`', '', line)
     return line
 
 

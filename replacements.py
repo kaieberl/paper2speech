@@ -16,13 +16,17 @@ text_rules = [
     # remove numbers after sentences, e.g. ... of training.4
     (r'(\w+)\.(\d+)$', r'\1'),
     # add break after title number
-    (r'(#+\s+\d+)\s+', r'\1<break time="0.5s"/>'),
+    (r'#+\s+(\d+(\.\d+)*)\s+', r'<s>\1</s>'),
+    (r' et al.', ' et al')
 ]
 
 math_rules = [
     (r'\\,', ''),
     (r"\-", ' minus '),
     (r"\+", ' plus '),
+    (r'\\left(', r'\('),
+    (r'\\right)', r'\)'),
+    # TODO: expectation
     (r'\((\w+)\|([\w,]+)\)', r" of \1 given \2 "),
     (r'(?<!^)\(([^)]+)\)', r" of \1 "),
     (r"\\mathcal{N}\((.*?),(.*?)\)", r" normal distribution with mean \1 and variance \2 "),

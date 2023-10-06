@@ -8,6 +8,10 @@ So I thought: Why not let a software read out the text for you?
 What if you just had to click a button in the Finder, and the book or paper is converted to speech automatically?  
 This script uses the Meta [Nougat](https://facebookresearch.github.io/nougat/) package to extract formatted text from pdf and then converts it to audio using the [Google Cloud Text to Speech API](https://cloud.google.com/text-to-speech?hl=de).
 
+Sample output for the paper [Large Language Models for Compiler Optimization](https://arxiv.org/abs/2309.07062):  
+[output audio](https://github.com/kaieberl/paper2speech/blob/main/Large%20Language%20Models%20for%20Compiler%20Optimization.mp4)  
+<img src="https://github.com/kaieberl/paper2speech/blob/main/Large%20Language%20Models%20for%20Compiler%20Optimization.jpg" width="500">
+
 ## Capabilities
 - pause before and after headings
 - skip references like \[1\], \(1, 2)], \[Feynman et al., 1965\], \[AAKA23, SKNM23\]
