@@ -69,6 +69,7 @@ python3 ~/path/to/paper2speech/main.py $1
 - only works for English
 
 ## Future Work
+- use GPT API to scan first page, detect names with special pronunciation, e.g. NVIDIA, IEEE, etc.
 - read out figure caption before referenced in text
 - add chapters to output audio file
-- use proper parser for inline math (likely Sympy Lark LaTeX parser)
+- use proper parser (or GPT API) for inline math (likely Sympy Lark LaTeX parser)
