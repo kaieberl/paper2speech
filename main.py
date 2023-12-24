@@ -1,5 +1,6 @@
 import os
 import argparse
+import subprocess
 
 from text_to_speech import merge_mp3_files, MP3Generator
 
@@ -13,9 +14,11 @@ if __name__ == '__main__':
         exit(1)
 
     out_path = args.output_path or os.path.dirname(args.input_file)
-    exit_code = os.system('nougat "{}" -o "{}" -m 0.1.0-base'.format(args.input_file, out_path))
-    if exit_code != 0:
-        print('Failed to convert pdf to markdown. Please check your nougat installation.')
+    command = f'nougat "{args.input_file}" -o "{out_path}" -m 0.1.0-base'
+    process = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    output, error = process.communicate()
+    if process.returncode != 0:
+        print(error.decode())
         exit(1)
 
     mp3_gen = MP3Generator(os.path.join(out_path, os.path.basename(args.input_file).replace('.pdf', '.mmd')))
