@@ -6,8 +6,8 @@ from google.cloud import texttospeech
 from replacements import text_rules, math_rules
 
 # break length
-SECTION_BREAK = 2  # sec
-CAPTION_BREAK = 1.5  # sec
+SECTION_BREAK = 1  # sec
+CAPTION_BREAK = 1  # sec
 
 PROJECT_DIR = os.path.dirname(os.path.abspath(__file__))
 os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = os.path.join(PROJECT_DIR, "texttospeech.json")
@@ -124,6 +124,8 @@ class MP3Generator:
     def generate_mp3_files(self):
         with open(self.md_filename, "r") as md_file:
             for id, line in enumerate(md_file.readlines()):
+                if re.match(r"^#{1,6} References", line):
+                    break
                 line = process_line(line)
 
                 if len(self.ssml.encode("utf-8")) + len(line.encode("utf-8")) > 4500:
@@ -206,3 +208,24 @@ def merge_mp3_files(out_path, mp3_file_list):
     for mp3_file in mp3_file_list:
         os.remove(mp3_file)
     print("Ended merging mp3 files: {}".format(merged_mp3_file_name))
+
+
+def refine_mmd(mmd_file):
+    """
+    This is for another project.
+    Replace \mathds and \mathbbm by \mathbb for conversion to html with mathpix-markdown-it
+    Args:
+        mmd_file: full path to the markdown file
+
+    Returns:
+        None
+    """
+    with open(mmd_file, "r") as file:
+        mmd = file.read()
+
+    # remove comments
+    mmd = re.sub(r"\\mathds\{", r"\\mathbb{", mmd)
+    mmd = re.sub(r"\\mathbbm\{", r"\\mathbb{", mmd)
+
+    with open(mmd_file, "w") as file:
+        file.write(mmd)

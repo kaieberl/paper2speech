@@ -26,7 +26,11 @@ Sample output for the paper [Large Language Models for Compiler Optimization](ht
 pip3 install -r requirements.txt
 ```
 ```bash
-python3 main.py <input_file> -o <output_path>
+python3 main.py <input_file.pdf> -o <output_path>
+```
+Alternatively, you can pass in an MMD (Mathpix Markdown) file directly:
+```bash
+python3 main.py <input_file.mmd> -o <output_path>
 ```
 
 The Google cloud authentication json file should be in the same directory as the main.py file. It can be downloaded from the Google Cloud Console, as described [here](https://cloud.google.com/api-keys/docs/create-manage-api-keys).  
