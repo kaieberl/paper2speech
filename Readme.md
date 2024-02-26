@@ -36,7 +36,7 @@ python3 main.py <input_file.mmd> -o <output_path>
 The Google cloud authentication json file should be in the same directory as the main.py file. It can be downloaded from the Google Cloud Console, as described [here](https://cloud.google.com/api-keys/docs/create-manage-api-keys).  
 TLDR: On [https://cloud.google.com](https://cloud.google.com), create a new project. In your project, in the upper right corner, click on the 3 dots > project settings > service accounts > choose one or create service account > create key > json > create.
 The resulting json file should be downloaded automatically.
-Google TTS is free for the first 1 million characters per month, then $4 per 1 million characters.
+Google TTS is free for the first 1 million characters per month, after that $16 per 1M characters for the Neural2 voices and $4 per 1M characters for the Wavenet voices.
 
 You can customize the voice in the definition of the `voice` variable.
 ```python3
@@ -72,8 +72,6 @@ python3 ~/path/to/paper2speech/main.py $1
 - captions of tables, figures are always read at the end of the page (because of the way Nougat has been trained)
 - only works for English
 
-## Future Work
-- use GPT API to scan first page, detect names with special pronunciation, e.g. NVIDIA, IEEE, etc.
-- read out figure caption before referenced in text
-- add chapters to output audio file
-- use proper parser (or GPT API) for inline math (likely Sympy Lark LaTeX parser)
+## Roadmap
+- use gpt-3.5-turbo / Gemma 2B to detect names with special pronunciation, e.g. IEEE
+- add chapters to audio file
