@@ -12,7 +12,7 @@ Sample output for the paper [Large Language Models for Compiler Optimization](ht
 [output audio](https://github.com/kaieberl/paper2speech/blob/main/Large%20Language%20Models%20for%20Compiler%20Optimization.mp4)  
 <img src="https://github.com/kaieberl/paper2speech/blob/main/Large%20Language%20Models%20for%20Compiler%20Optimization.jpg" width="500">
 
-## Capabilities
+## Features
 - pause before and after headings
 - skip references like \[1\], \(1, 2)], \[Feynman et al., 1965\], \[AAKA23, SKNM23\]
 - spell out abbreviations like e.g., i.e., w.r.t., Fig., Eq.

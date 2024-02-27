@@ -137,6 +137,9 @@ math_replacements = [
     (r'\\mathcal\{([^}]+)}', r'\1'),
     (r'\\lVert', 'norm of'),
     (r'\\rVert', ''),
+    (r'\\langle', ''),
+    (r'\\rangle', ''),
+    (r'\\dots', ''),
 
     # Removing unnecessary LaTeX commands
     (r'\\big{(.*?)}', r'\1'),

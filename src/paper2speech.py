@@ -2,7 +2,7 @@ import os
 import argparse
 import subprocess
 
-from .text_to_speech import merge_mp3_files, MP3Generator
+from src.text_to_speech import merge_mp3_files, MP3Generator
 
 
 def main():

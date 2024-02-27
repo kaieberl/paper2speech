@@ -33,7 +33,7 @@ class MP3Generator:
             mm = MarkdownModel()
             mm.markdown_to_html(md_file.read())
 
-            for chunk in mm.get_chunk():
+            for id, chunk in enumerate(mm.get_chunk()):
                 filename = f'{os.path.basename(self.md_filename)[:-4]}-{id}.mp3'
                 mp3_file = generate_mp3_for_ssml(self.temp_path, filename, chunk)
                 self.mp3_file_list.append(mp3_file)

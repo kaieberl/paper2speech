@@ -1,6 +1,7 @@
 import re
 
 from bs4 import BeautifulSoup
+# import pygemma
 from markdown_it import MarkdownIt
 from mdit_py_plugins.front_matter import front_matter_plugin
 from mdit_py_plugins.footnote import footnote_plugin
@@ -20,6 +21,19 @@ class MarkdownModel:
         self.ssml = ''
 
     def markdown_to_html(self, content: str):
+        # def remove_authors(text: str) -> str:
+        #     pygemma.chat_base(
+        #         [
+        #             "--tokenizer",
+        #             "/Users/k/Documents/Code/gemma.cpp/tokenizer.spm",
+        #             "--compressed_weights",
+        #             "/Users/k/Documents/Code/gemma.cpp/2b-it-sfp.sbs",
+        #             "--model",
+        #             "2b-it"
+        #         ]
+        #     )
+        #     return pygemma.chat(text)
+
         md = (MarkdownIt(
                 'commonmark',
                 {}
@@ -73,6 +87,8 @@ class MarkdownModel:
         for pattern, replacement in text_replacements:
             self.ssml = re.sub(pattern, replacement, self.ssml)
 
+        # self.ssml = remove_authors(self.ssml)
+
     def get_chunk(self) -> str:
         # break after </p> if current chunk length exceeds 4500 characters
         chunk = ''
@@ -84,3 +100,4 @@ class MarkdownModel:
                 chunk = tag_str
             else:
                 chunk += tag_str
+        yield chunk
