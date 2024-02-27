@@ -26,14 +26,14 @@ Sample output for the paper [Large Language Models for Compiler Optimization](ht
 pip3 install -r requirements.txt
 ```
 ```bash
-python3 main.py <input_file.pdf> -o <output_path>
+python3 __main__.py <input_file.pdf> -o <output_path>
 ```
 Alternatively, you can pass in an MMD (Mathpix Markdown) file directly:
 ```bash
-python3 main.py <input_file.mmd> -o <output_path>
+python3 __main__.py <input_file.mmd> -o <output_path>
 ```
 
-The Google cloud authentication json file should be in the same directory as the main.py file. It can be downloaded from the Google Cloud Console, as described [here](https://cloud.google.com/api-keys/docs/create-manage-api-keys).  
+The Google cloud authentication json file should be in the `src` directory. It can be downloaded from the Google Cloud Console, as described [here](https://cloud.google.com/api-keys/docs/create-manage-api-keys).  
 TLDR: On [https://cloud.google.com](https://cloud.google.com), create a new project. In your project, in the upper right corner, click on the 3 dots > project settings > service accounts > choose one or create service account > create key > json > create.
 The resulting json file should be downloaded automatically.
 Google TTS is free for the first 1 million characters per month, after that $16 per 1M characters for the Neural2 voices and $4 per 1M characters for the Wavenet voices.
@@ -64,7 +64,7 @@ On macOS, you can create a shortcut in the Finder with the following steps:
 ```bash
 source ~/opt/miniconda3/etc/profile.d/conda.sh
 conda activate paper2audio
-python3 ~/path/to/paper2speech/main.py $1
+python3 ~/path/to/paper2speech/__main__.py $1
 ```
 5. save the action and give it a name, e.g. "Paper2Speech"
 

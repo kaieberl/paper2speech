@@ -12,7 +12,7 @@ from mdit_py_plugins.anchors import anchors_plugin
 from mdit_py_plugins.attrs import attrs_plugin
 from mdit_py_plugins.texmath import texmath_plugin
 
-from replacements import text_replacements, math_replacements
+from src.replacements import text_replacements, math_replacements
 
 
 class MarkdownModel:
@@ -71,7 +71,7 @@ class MarkdownModel:
         self.ssml = str(soup)
 
         for pattern, replacement in text_replacements:
-            self.ssml = self.ssml.replace(pattern, replacement)
+            self.ssml = re.sub(pattern, replacement, self.ssml)
 
     def get_chunk(self) -> str:
         # break after </p> if current chunk length exceeds 4500 characters

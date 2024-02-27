@@ -4,12 +4,8 @@ import tempfile
 
 from google.cloud import texttospeech
 
-from markdown_to_html import MarkdownModel
-from replacements import text_replacements, math_replacements
-
-# break length
-SECTION_BREAK = 1  # sec
-CAPTION_BREAK = 1  # sec
+from src import MarkdownModel
+from src.replacements import text_replacements
 
 PROJECT_DIR = os.path.dirname(os.path.abspath(__file__))
 os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = os.path.join(PROJECT_DIR, "texttospeech.json")

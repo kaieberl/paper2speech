@@ -2,9 +2,10 @@ import os
 import argparse
 import subprocess
 
-from text_to_speech import merge_mp3_files, MP3Generator
+from .text_to_speech import merge_mp3_files, MP3Generator
 
-if __name__ == '__main__':
+
+def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('input_file', type=str, help='input file path')
     parser.add_argument('-o', '--output_path', type=str, help='output file path', default=None)

@@ -22,7 +22,16 @@ text_replacements = [
     (r'(\w+)\.(\d+)$', r'\1'),
     # add break after title number
     (r'#+\s+(\d+(\.\d+)*)\s+', r'<s>\1</s>'),
-    (r' et al.', ' et al')
+    (r' et al.', ' et al'),
+    # remove ssml closing tags
+    (r'<break time="0.5s"></break>', r'<break time="0.5s"/>'),
+    # remove references
+    (r'\s*(\[[0-9,-, ]+(, pp\. [0-9,-]+|, p\.\d+[f]?[f]?\.?)?\]|\([0-9,-, ]+(, pp\. [0-9,-]+|, p\.\d+[f]?[f]?\.?)?\))', ''),
+    (r'\s*\[[^\]]*, \d{4}(?:, [^\]]*, \d{4})*\]', ''),
+    (r'\s*\([^\)]*, \d{4}(?:[;,] [^\)]*, \d{4}[a-zA-Z]*?)*\)', ''),
+    (r'\s*(\b\w+\s+et al\.) (\[\d{4}\]|\(\d{4}\))', r'\1'),
+    # remove urls
+    (r'\s*https?://[\w/:%#\$&\?\(\)~\.=\+\-]*[\w\d_\-]', ''),
 ]
 
 math_replacements = [
@@ -37,9 +46,10 @@ math_replacements = [
     (r'\^\{\\circ\}', 'degrees'),
 
     # Fractions and powers
-    (r'\\frac{([^}]+)}{([^}]+)}', r'\1 over \2'),
     (r'\^2', 'squared'),
     (r'\^3', 'cubed'),
+    (r'\^\{T\}', 'transpose'),
+    (r'\\frac{([^}]+)}{([^}]+)}', r'\1 over \2'),
 
     # Roots
     (r'\\sqrt{([^}]+)}', 'square root of \1'),
@@ -48,7 +58,7 @@ math_replacements = [
 
     # Calculus symbols
     (r'\\int', 'integral'),
-    (r'\\sum', 'summation'),
+    (r'\\sum', 'summation over'),
     (r'\\lim', 'limit'),
     (r'\\infty', 'infinity'),
 
@@ -130,6 +140,7 @@ math_replacements = [
 
     # Removing unnecessary LaTeX commands
     (r'\\big{(.*?)}', r'\1'),
+    (r'\\boldsymbol', ''),
     (r'\\left', ''),
     (r'\\right', ''),
     (r'\^', ''),
