@@ -1,7 +1,8 @@
 import re
+import subprocess
+from typing import List
 
 from bs4 import BeautifulSoup
-# import pygemma
 from markdown_it import MarkdownIt
 from mdit_py_plugins.front_matter import front_matter_plugin
 from mdit_py_plugins.footnote import footnote_plugin
@@ -15,38 +16,44 @@ from mdit_py_plugins.texmath import texmath_plugin
 
 from src.replacements import text_replacements, math_replacements
 
+GEMMA_CPP_PATH = '/Users/k/Documents/Code/gemma.cpp/build/gemma'
+
 
 class MarkdownModel:
     def __init__(self) -> None:
         self.ssml = ''
 
     def markdown_to_html(self, content: str):
-        # def remove_authors(text: str) -> str:
-        #     pygemma.chat_base(
-        #         [
-        #             "--tokenizer",
-        #             "/Users/k/Documents/Code/gemma.cpp/tokenizer.spm",
-        #             "--compressed_weights",
-        #             "/Users/k/Documents/Code/gemma.cpp/2b-it-sfp.sbs",
-        #             "--model",
-        #             "2b-it"
-        #         ]
-        #     )
-        #     return pygemma.chat(text)
+        def is_authors(text: str) -> List[bool]:
+            result = subprocess.run(
+                [GEMMA_CPP_PATH, '--', '--tokenizer', '/Users/k/Documents/Code/gemma.cpp/build/tokenizer.spm', '--compressed_weights', '/Users/k/Documents/Code/gemma.cpp/build/2b-it-sfp.sbs', '--model', '2b-it', '--verbosity', '0'],
+                input='You are provided with lines extracted from various scientific papers. Your task is to determine whether each line represents the list of authors. Here is how to decide. Author List (True): Typically includes names (e.g., Sarah Wilson), Michael Johnson). Not an Author List (False): Could be any other part of the paper, such as the title, sentences from the abstract or body, figure captions, etc. ' + text,
+                capture_output=True,
+                text=True
+            )
+            result = subprocess.run(
+                [GEMMA_CPP_PATH, '--', '--tokenizer', '/Users/k/Documents/Code/gemma.cpp/build/tokenizer.spm', '--compressed_weights', '/Users/k/Documents/Code/gemma.cpp/build/2b-it-sfp.sbs', '--model', '2b-pt', '--verbosity', '0'],
+                input='<start_of_turn>user Your task is to determine whether each line represents the list of authors (True / False).<end_of_turn>' + '<start_of_turn>model ' + ' '.join(result.stdout.split("\n")) + '<start_of_turn>user Convert your answer to booleans for each line.<end_of_turn><start_of_turn>model',
+                capture_output=True,
+                text=True
+            )
+            # convert result containing some "True" and "False" to list of booleans
+            boolean_list = [word.lower() == 'true' for word in result.stdout.split() if word.lower() in ['true', 'false']]
+            return boolean_list
 
         md = (MarkdownIt(
-                'commonmark',
-                {}
-            )
-            .use(front_matter_plugin)
-            .use(footnote_plugin)
-            .use(deflist_plugin)
-            .use(tasklists_plugin)
-            .use(fieldlist_plugin)
-            .use(anchors_plugin, max_level=6)
-            # .use(container_plugin)
-            .use(attrs_plugin)
-            .use(texmath_plugin, delimiters='brackets'))
+            'commonmark',
+            {}
+        )
+              .use(front_matter_plugin)
+              .use(footnote_plugin)
+              .use(deflist_plugin)
+              .use(tasklists_plugin)
+              .use(fieldlist_plugin)
+              .use(anchors_plugin, max_level=6)
+              # .use(container_plugin)
+              .use(attrs_plugin)
+              .use(texmath_plugin, delimiters='brackets'))
         rendered = md.render(content)
 
         # prepare html for text-to-speech
@@ -87,7 +94,25 @@ class MarkdownModel:
         for pattern, replacement in text_replacements:
             self.ssml = re.sub(pattern, replacement, self.ssml)
 
-        # self.ssml = remove_authors(self.ssml)
+        soup = BeautifulSoup(self.ssml, 'html.parser')
+        tags = [tag for tag in soup.children if tag.get_text() and tag.get_text() != "\n"][:6]
+        elements = [tag.get_text() for tag in tags]
+        # if longest element is >300 characters, remove all subsequent elements
+        while elements and len(max(elements, key=len)) > 300:
+            elements = elements[:-1]
+        prompt = ""
+        for i, elem in enumerate(elements):
+            elem = re.sub(r'\d+', '', elem)
+            prompt += f'{i + 1}: "' + elem + '", '
+        try:
+            remove = is_authors(prompt[:-2])
+            assert len(remove) == len(elements)
+            for i, elem in enumerate(tags):
+                if remove[i]:
+                    # replace only the first occurrence
+                    self.ssml = self.ssml.replace(str(elem), '', 1)
+        except Exception as e:
+            print(f"Removing authors using Gemma.cpp failed: {e}")
 
     def get_chunk(self) -> str:
         # break after </p> if current chunk length exceeds 4500 characters

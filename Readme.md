@@ -22,6 +22,7 @@ Sample output for the paper [Large Language Models for Compiler Optimization](ht
 - read out figure, table captions
 
 ## Usage
+Replace the `GEMMA_CPP_PATH` variable in `src/markdown_to_html.py` with the build path of your gemma executable. The tokenizer and model weights should be in the same directory.
 ```bash
 pip3 install -r requirements.txt
 ```

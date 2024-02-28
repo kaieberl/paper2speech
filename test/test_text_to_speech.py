@@ -1,4 +1,5 @@
 import unittest
+from unittest.mock import patch
 
 from src import MarkdownModel
 
@@ -7,44 +8,62 @@ class TestMarkdownModel(unittest.TestCase):
     def setUp(self):
         self.markdown_model = MarkdownModel()
 
-    def test_heading(self):    # TODO: skip authors
+    @patch('subprocess.run')
+    def test_heading(self, mock_subprocess):
+        mock_subprocess.return_value = 'True'
         test_input = """# Graph Element Networks: adaptive, structured computation and memory
 
 Ferran Alet\({}^{\,1}\)  Adarsh K. Jeewajee\({}^{\,1}\)  Maria Bauza\({}^{\,2}\)
 
 **Alberto Rodriguez\({}^{\,2}\)  Tomas Lozano-Perez\({}^{\,1}\)  Leslie Pack Kaelbling\({}^{\,1}\)**"""
         self.markdown_model.markdown_to_html(test_input)
-        expected_output = """<break time="0.5s"/><p>Graph Element Networks: adaptive, structured computation and memory</p><break time="0.5s"/>
-<p>Ferran Alet,1  Adarsh K. Jeewajee,1  Maria Bauza,2</p>
-<p><emphasis>Alberto Rodriguez,2  Tomas Lozano-Perez,1  Leslie Pack Kaelbling,1</emphasis></p>"""
+        expected_output = """<break time="0.5s"/><p>Graph Element Networks: adaptive, structured computation and memory</p><break time="0.5s"/><p>Ferran Alet,1  Adarsh K. Jeewajee,1  Maria Bauza,2</p><p><emphasis>Alberto Rodriguez,2  Tomas Lozano-Perez,1  Leslie Pack Kaelbling,1</emphasis></p>"""
         self.assertEqual(self.markdown_model.ssml.strip(), expected_output)
 
-    def test_math_equations(self):
+    @patch('subprocess.run')
+    def test_math_equations(self, mock_subprocess):
+        mock_subprocess.return_value = 'True'
         test_input = "latent function over the space \(\mathbb{X}\) as \(z(x)=\sum_{l}r(x)_{l}z_{l}^{T}\)"
         self.markdown_model.markdown_to_html(test_input)
         expected_output = '<p>latent function over the space X as z(x)= summation over l r(x) l z l transpose</p>'
         self.assertEqual(self.markdown_model.ssml.strip(), expected_output)
 
-    def test_citations(self):
+    @patch('subprocess.run')
+    def test_citations(self, mock_subprocess):
+        mock_subprocess.return_value = 'True'
         test_input = "We use neural processes (NPs) (Garnelo et al., 2018), which were also used by Eslami et al. (2018)."
         self.markdown_model.markdown_to_html(test_input)
         expected_output = "<p>We use neural processes (NPs), which were also used by Eslami et al.</p>"
         self.assertEqual(self.markdown_model.ssml.strip(), expected_output)
 
-    def test_list(self):
+    @patch('subprocess.run')
+    def test_list(self, mock_subprocess):
+        mock_subprocess.return_value = 'True'
         test_input = """* Any point inside the house follows the Laplace equation;
 * Any point in a heater or cooler follows the Poisson equation;
 * All exterior borders are modeled as very thin windows"""
         self.markdown_model.markdown_to_html(test_input)
-        expected_output = """<p>Any point inside the house follows the Laplace equation;</p>
-<p>Any point in a heater or cooler follows the Poisson equation;</p>
-<p>All exterior borders are modeled as very thin windows</p>"""
+        expected_output = """<p>Any point inside the house follows the Laplace equation;</p><p>Any point in a heater or cooler follows the Poisson equation;</p><p>All exterior borders are modeled as very thin windows</p>"""
         self.assertEqual(self.markdown_model.ssml.strip(), expected_output)
 
-    def test_url(self):
+    @patch('subprocess.run')
+    def test_url(self, mock_subprocess):
+        mock_subprocess.return_value = 'True'
         test_input = "Code can be found at [https://github.com/FerranAlet/graph_element_networks](https://github.com/FerranAlet/graph_element_networks)."
         self.markdown_model.markdown_to_html(test_input)
         expected_output = "<p>Code can be found at.</p>"
+        self.assertEqual(self.markdown_model.ssml.strip(), expected_output)
+
+    def test_authors(self):
+        test_input = """# Graph Element Networks: adaptive, structured computation and memory
+
+Ferran Alet\({}^{\,1}\)  Adarsh K. Jeewajee\({}^{\,1}\)  Maria Bauza\({}^{\,2}\)
+
+**Alberto Rodriguez\({}^{\,2}\)  Tomas Lozano-Perez\({}^{\,1}\)  Leslie Pack Kaelbling\({}^{\,1}\)**
+
+###### Abstract"""
+        self.markdown_model.markdown_to_html(test_input)
+        expected_output = '<break time="0.5s"/><p>Graph Element Networks: adaptive, structured computation and memory</p><break time="0.5s"/><break time="0.5s"/><p>Abstract</p><break time="0.5s"/>'
         self.assertEqual(self.markdown_model.ssml.strip(), expected_output)
 
 

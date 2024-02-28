@@ -32,6 +32,8 @@ text_replacements = [
     (r'\s*(\b\w+\s+et al\.) (\[\d{4}\]|\(\d{4}\))', r'\1'),
     # remove urls
     (r'\s*https?://[\w/:%#\$&\?\(\)~\.=\+\-]*[\w\d_\-]', ''),
+    # remove new lines
+    (r'\n', ''),
 ]
 
 math_replacements = [
