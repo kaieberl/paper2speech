@@ -41,6 +41,8 @@ class MarkdownModel:
             boolean_list = [word.lower() == 'true' for word in result.stdout.split() if word.lower() in ['true', 'false']]
             return boolean_list
 
+        needs_author_check = '# abstract' in content.lower() or '# introduction' in content.lower()
+
         md = (MarkdownIt(
             'commonmark',
             {}
@@ -94,25 +96,26 @@ class MarkdownModel:
         for pattern, replacement in text_replacements:
             self.ssml = re.sub(pattern, replacement, self.ssml)
 
-        soup = BeautifulSoup(self.ssml, 'html.parser')
-        tags = [tag for tag in soup.children if tag.get_text() and tag.get_text() != "\n"][:6]
-        elements = [tag.get_text() for tag in tags]
-        # if longest element is >300 characters, remove all subsequent elements
-        while elements and len(max(elements, key=len)) > 300:
-            elements = elements[:-1]
-        prompt = ""
-        for i, elem in enumerate(elements):
-            elem = re.sub(r'\d+', '', elem)
-            prompt += f'{i + 1}: "' + elem + '", '
-        try:
-            remove = is_authors(prompt[:-2])
-            assert len(remove) == len(elements)
-            for i, elem in enumerate(tags):
-                if remove[i]:
-                    # replace only the first occurrence
-                    self.ssml = self.ssml.replace(str(elem), '', 1)
-        except Exception as e:
-            print(f"Removing authors using Gemma.cpp failed: {e}")
+        if needs_author_check:
+            soup = BeautifulSoup(self.ssml, 'html.parser')
+            tags = [tag for tag in soup.children if tag.get_text() and tag.get_text() != "\n"][:6]
+            elements = [tag.get_text() for tag in tags]
+            # if longest element is >300 characters, remove all subsequent elements
+            while elements and len(max(elements, key=len)) > 300:
+                elements = elements[:-1]
+            prompt = ""
+            for i, elem in enumerate(elements):
+                elem = re.sub(r'\d+', '', elem)
+                prompt += f'{i + 1}: "' + elem + '", '
+            try:
+                remove = is_authors(prompt[:-2])
+                assert len(remove) == len(elements)
+                for i, elem in enumerate(tags):
+                    if remove[i]:
+                        # replace only the first occurrence
+                        self.ssml = self.ssml.replace(str(elem), '', 1)
+            except Exception as e:
+                print(f"Removing authors using Gemma.cpp failed: {e}")
 
     def get_chunk(self) -> str:
         # break after </p> if current chunk length exceeds 4500 characters
