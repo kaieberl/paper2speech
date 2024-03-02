@@ -1,5 +1,11 @@
 # Paper2Speech
 
+> [!TIP]
+> ArXiv now features html versions for new papers, see [here](https://info.arxiv.org/about/accessible_HTML.html). I am currently working on a browser add-on that adds buttons directly to the website. You can also convert the TeX sources to html yourself using [latexml](https://github.com/brucemiller/LaTeXML). The `latexml` folder provided in this repository is a copy from [engrafo](https://github.com/arxiv-vanity/engrafo).
+> ```bash
+> latexmlc --dest out.html main.tex --nographicimages --format html5 --nodefaultresources --mathtex --svg --verbose --timestamp 0 --path latexml/packages/ --preload latexml/engrafo.ltxml --preload /opt/local/lib/perl5/vendor_perl/5.34/LaTeXML/Package/hyperref.sty.ltxml --xsltparameter SIMPLIFY_HTML:true
+> ```
+
 ## Motivation
 As a student in applied mathematics / machine learning, I often get to read scientific books, lecture notes and papers.
 Usually I prefer listening to a lecture from the professor and following his visual explanations on the blackboard, because then I get much information through the ear and don't have to do the "heavy lifting" through reading only.
@@ -27,17 +33,17 @@ Replace the `GEMMA_CPP_PATH` variable in `src/markdown_to_html.py` with the buil
 pip3 install -r requirements.txt
 ```
 ```bash
-python3 __main__.py <input_file.pdf> -o <output_path>
+python3 main.py <input_file.pdf> -o <output_path>
 ```
 Alternatively, you can pass in an MMD (Mathpix Markdown) file directly:
 ```bash
-python3 __main__.py <input_file.mmd> -o <output_path>
+python3 main.py <input_file.mmd> -o <output_path>
 ```
 
 The Google cloud authentication json file should be in the `src` directory. It can be downloaded from the Google Cloud Console, as described [here](https://cloud.google.com/api-keys/docs/create-manage-api-keys).  
 TLDR: On [https://cloud.google.com](https://cloud.google.com), create a new project. In your project, in the upper right corner, click on the 3 dots > project settings > service accounts > choose one or create service account > create key > json > create.
 The resulting json file should be downloaded automatically.
-Google TTS is free for the first 1 million characters per month, after that $16 per 1M characters for the Neural2 voices and $4 per 1M characters for the Wavenet voices.
+Google TTS Neural2 and Wavenet voices are free for the first 1 million characters per month, after that $16 per 1M characters for the Neural2 voices and $4 per 1M characters for the Wavenet voices.
 
 You can customize the voice in the definition of the `voice` variable.
 ```python3
@@ -65,11 +71,11 @@ On macOS, you can create a shortcut in the Finder with the following steps:
 ```bash
 source ~/opt/miniconda3/etc/profile.d/conda.sh
 conda activate paper2audio
-python3 ~/path/to/paper2speech/__main__.py $1
+python3 ~/path/to/paper2speech/main.py $1
 ```
 5. save the action and give it a name, e.g. "Paper2Speech"
 
-## Limitations
+## Limitations (for PDFs)
 - captions of tables, figures are always read at the end of the page (because of the way Nougat has been trained)
 - only works for English
 
