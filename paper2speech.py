@@ -33,3 +33,7 @@ def main():
     mp3_gen = MP3Generator(os.path.join(out_path, filename + '.mmd'))
     mp3_files = mp3_gen.generate_mp3_files()
     merge_mp3_files(out_path, mp3_files)
+
+
+if __name__ == "__main__":
+    main()

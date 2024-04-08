@@ -99,7 +99,6 @@ def merge_mp3_files(out_path, mp3_file_list):
 
 def refine_mmd(mmd_file):
     """
-    This is for another project.
     Replace \mathds and \mathbbm by \mathbb for conversion to html with mathpix-markdown-it
     Args:
         mmd_file: full path to the markdown file

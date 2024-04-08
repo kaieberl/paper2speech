@@ -30,14 +30,15 @@ Sample output for the paper [Large Language Models for Compiler Optimization](ht
 ## Usage
 Replace the `GEMMA_CPP_PATH` variable in `src/markdown_to_html.py` with the build path of your gemma executable. The tokenizer and model weights should be in the same directory.
 ```bash
-pip3 install -r requirements.txt
+git clone git://github.com/kaieberl/paper2speech
+pip install .
 ```
 ```bash
-python3 main.py <input_file.pdf> -o <output_path>
+paper2speech <input_file.pdf> -o <output_path>
 ```
 Alternatively, you can pass in an MMD (Mathpix Markdown) file directly:
 ```bash
-python3 main.py <input_file.mmd> -o <output_path>
+paper2speech <input_file.mmd> -o <output_path>
 ```
 
 The Google cloud authentication json file should be in the `src` directory. It can be downloaded from the Google Cloud Console, as described [here](https://cloud.google.com/api-keys/docs/create-manage-api-keys).  
@@ -71,7 +72,7 @@ On macOS, you can create a shortcut in the Finder with the following steps:
 ```bash
 source ~/opt/miniconda3/etc/profile.d/conda.sh
 conda activate paper2audio
-python3 ~/path/to/paper2speech/main.py $1
+paper2speech $1
 ```
 5. save the action and give it a name, e.g. "Paper2Speech"
 

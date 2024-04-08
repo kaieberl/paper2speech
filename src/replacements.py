@@ -125,6 +125,7 @@ math_replacements = [
     (r'\\notin', 'is not an element of'),
     (r'\\subset', 'subset'),
     (r'\\setminus', 'set minus'),
+    (r'\\operatorname\{supp}', 'support of'),
 
     # Other symbols
     (r'\\mathbb\{E}', 'expectation'),
@@ -142,6 +143,8 @@ math_replacements = [
     (r'\\langle', ''),
     (r'\\rangle', ''),
     (r'\\dots', ''),
+    (r'\\ldots', ''),
+    (r'\\mid', ''),
 
     # Removing unnecessary LaTeX commands
     (r'\\big{(.*?)}', r'\1'),
