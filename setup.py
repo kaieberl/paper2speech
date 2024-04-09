@@ -15,7 +15,7 @@ setup(
     py_modules=["paper2speech"],
     install_requires=[
         'nougat',
-        'transformers==4.37.2',
+        'transformers<=4.38.2',
         'nougat-ocr==0.1.8',
         'beautifulsoup4',
         'markdown-it-py[plugins]',
