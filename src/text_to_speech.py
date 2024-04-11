@@ -109,9 +109,9 @@ def refine_mmd(mmd_file):
     with open(mmd_file, "r") as file:
         mmd = file.read()
 
-    # remove comments
     mmd = re.sub(r"\\mathds\{", r"\\mathbb{", mmd)
     mmd = re.sub(r"\\mathbbm\{", r"\\mathbb{", mmd)
+    mmd = re.sub(r"\\@@LTX@noalign{\\vskip 6.0pt plus 2.0pt minus 2.0pt}\\omit\\cr", "", mmd)
 
     with open(mmd_file, "w") as file:
         file.write(mmd)

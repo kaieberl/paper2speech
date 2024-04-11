@@ -1,6 +1,5 @@
 from setuptools import setup, find_packages
 
-# Replace these placeholder values with your actual package info
 setup(
     name='paper2speech',
     version='0.2.0',

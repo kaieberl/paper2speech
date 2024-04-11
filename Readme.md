@@ -1,10 +1,7 @@
 # Paper2Speech
 
 > [!TIP]
-> ArXiv now features html versions for new papers, see [here](https://info.arxiv.org/about/accessible_HTML.html). I am currently working on a browser add-on that adds buttons directly to the website. You can also convert the TeX sources to html yourself using [latexml](https://github.com/brucemiller/LaTeXML). The `latexml` folder provided in this repository is a copy from [engrafo](https://github.com/arxiv-vanity/engrafo).
-> ```bash
-> latexmlc --dest out.html main.tex --nographicimages --format html5 --nodefaultresources --mathtex --svg --verbose --timestamp 0 --path latexml/packages/ --preload latexml/engrafo.ltxml --preload /opt/local/lib/perl5/vendor_perl/5.34/LaTeXML/Package/hyperref.sty.ltxml --xsltparameter SIMPLIFY_HTML:true
-> ```
+> ArXiv now features html versions for new papers, see [here](https://info.arxiv.org/about/accessible_HTML.html). I am currently working on a browser add-on that adds buttons directly to the website.
 
 ## Motivation
 As a student in applied mathematics / machine learning, I often get to read scientific books, lecture notes and papers.
@@ -27,19 +24,25 @@ Sample output for the paper [Large Language Models for Compiler Optimization](ht
 - do not read out table contents
 - read out figure, table captions
 
-## Usage
+## Installation
 Replace the `GEMMA_CPP_PATH` variable in `src/markdown_to_html.py` with the build path of your gemma executable. The tokenizer and model weights should be in the same directory.
 ```bash
 git clone git://github.com/kaieberl/paper2speech
 pip install .
 ```
+For conversion to html, additionally install:
 ```bash
-paper2speech <input_file.pdf> -o <output_path>
+brew install node
+npm install -g @mathpix/mpx-cli
+sudo port install latexml
 ```
-Alternatively, you can pass in an MMD (Mathpix Markdown) file directly:
+
+## Usage
+Files can be converted from pdf, mmd and tex to mp3 and html.
 ```bash
-paper2speech <input_file.mmd> -o <output_path>
+paper2speech <input_file.pdf> -o <output_file.mp3>
 ```
+In case an error occurs in a later stage, you can invoke the command again on intermediately produced files (e.g. mmd).
 
 The Google cloud authentication json file should be in the `src` directory. It can be downloaded from the Google Cloud Console, as described [here](https://cloud.google.com/api-keys/docs/create-manage-api-keys).  
 TLDR: On [https://cloud.google.com](https://cloud.google.com), create a new project. In your project, in the upper right corner, click on the 3 dots > project settings > service accounts > choose one or create service account > create key > json > create.
@@ -69,17 +72,26 @@ On macOS, you can create a shortcut in the Finder with the following steps:
 2. At the top, choose input as "PDF files" in "Finder". 
 3. add a "Run Shell Script" action. Set shell to /bin/zsh and pass input as arguments. 
 4. add the following code:
+For mp3 output:
 ```bash
 source ~/opt/miniconda3/etc/profile.d/conda.sh
 conda activate paper2audio
-paper2speech $1
+paper2speech $1 -o "${1%.*}.mp3"
 ```
-5. save the action and give it a name, e.g. "Paper2Speech"
+For creating an html page:
+```bash
+export PATH=/opt/homebrew/bin:/opt/local/bin:$PATH
+source ~/opt/miniconda3/etc/profile.d/conda.sh
+conda activate paper2audio
+file_name=${1##*/}
+paper2speech $1 -o "/path/to/paper2speech/out/${file_name%.*}.html"
+```
+Where the two paths in the first line should be the locations of `node` and `latexmlc`.
+5. save the action and give it a name, e.g. "Paper2Speech", or "PaperAI", respectively.
 
 ## Limitations (for PDFs)
-- captions of tables, figures are always read at the end of the page (because of the way Nougat has been trained)
 - only works for English
+- currently does not support images in PDFs
 
 ## Roadmap
-- use gpt-3.5-turbo / Gemma 2B to detect names with special pronunciation, e.g. IEEE
-- add chapters to audio file
+- create a Dockerfile for easy installation

@@ -1,0 +1,111 @@
+/* General styles for the document */
+@font-face {
+  font-display: swap;
+  font-family: Signifier;
+  font-style: normal;
+  font-weight: 400;
+  src: url(https://cdn.oaistatic.com/_next/static/media/signifier-light.c131ea48.woff2) format("woff2")
+}
+
+@font-face {
+  font-display: swap;
+  font-family: Signifier;
+  font-style: italic;
+  font-weight: 400;
+  src: url(https://cdn.oaistatic.com/_next/static/media/signifier-light-italic.ae129369.woff2) format("woff2")
+}
+
+@font-face {
+  font-display: swap;
+  font-family: Signifier;
+  font-style: normal;
+  font-weight: 700;
+  src: url(https://cdn.oaistatic.com/_next/static/media/signifier-bold.3a11015f.woff2) format("woff2")
+}
+
+@font-face {
+  font-display: swap;
+  font-family: Signifier;
+  font-style: italic;
+  font-weight: 700;
+  src: url(https://cdn.oaistatic.com/_next/static/media/signifier-bold-italic.52d511e3.woff2) format("woff2")
+}
+
+@font-face {
+  font-display: swap;
+  font-family: Söhne;
+  font-style: normal;
+  font-weight: 600;
+  src: url(https://cdn.oaistatic.com/_next/static/media/soehne-halbfett.977f1845.woff2) format("woff2")
+}
+
+@font-face {
+  font-display: swap;
+  font-family: Söhne Mono;
+  font-style: normal;
+  font-weight: 400;
+  src: url(https://cdn.oaistatic.com/_next/static/media/soehne-mono-buch.de677af1.woff2) format("woff2")
+}
+
+html {
+  font-size: 24px;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box !important;
+}
+
+@-ms-viewport {
+  width: device-width;
+}
+
+::selection {
+  background-color: #ffd98c;
+}
+
+body {
+  --text-font-family: 'Signifier', 'Georgia', Helvetica, Arial, sans-serif !important;
+  --headings-font-family: 'Söhne', 'Georgia', Helvetica, Arial, sans-serif !important;
+  --bs-font-sans-serif: 'Signifier', 'Georgia', Helvetica, Arial, sans-serif !important;
+  --code-font-family: 'Söhne Mono', 'Noto Sans', Helvetica, Arial, sans-serif !important;
+  --text-color: rgba(255, 255, 255, 0.85) !important;
+  color: var(--text-color) !important;
+  background-color: var(--background-color) !important;
+  --main-width: 40rem !important;
+}
+
+.ltx_page_main >.ltx_TOC.active {
+  display: none;
+}
+
+.package-alerts {
+  display: none !important;
+}
+
+.desktop_header {
+  display: none !important;
+}
+
+.btn {
+  display: none !important;
+}
+
+h2 {
+  padding-top: 0.1rem;
+}
+
+h3 {
+  padding-top: 0.2rem;
+}
+
+.ltx_abstract {
+  padding-top: 0.4rem;
+}
+
+.ltx_section, .ltx_subsection, .ltx_subsubsection, .ltx_abstract {
+  position: relative;
+}
+
+.ltx_figure img {
+  background-color: white !important;
+}
