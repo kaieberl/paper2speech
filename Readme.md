@@ -16,6 +16,8 @@ Sample output for the paper [Large Language Models for Compiler Optimization](ht
 <img src="https://github.com/kaieberl/paper2speech/blob/main/Large%20Language%20Models%20for%20Compiler%20Optimization.jpg" width="500">
 
 ## Features
+The aim of this package is to make papers more accessible by converting them to audio, or to an easy-to-read web page.
+
 - pause before and after headings
 - skip references like \[1\], \(1, 2)], \[Feynman et al., 1965\], \[AAKA23, SKNM23\]
 - spell out abbreviations like e.g., i.e., w.r.t., Fig., Eq.
@@ -88,6 +90,12 @@ paper2speech $1 -o "/path/to/paper2speech/out/${file_name%.*}.html"
 ```
 Where the two paths in the first line should be the locations of `node` and `latexmlc`.
 5. save the action and give it a name, e.g. "Paper2Speech", or "PaperAI", respectively.
+
+## FAQ
+### What to do if I get the error: Mathpix CLI conversion failed?
+There is likely an unsupported LaTeX command in your mmd file.  
+1. Please go to [snip.mathpix.com](snip.mathpix.com) and paste the content of your mmd file into a new note. You will get a preview on the right. Any command unsupported in Mathpix Markdown will show up as yellow warning.
+2. Inside `text_to_speech.py`, add a replacement to the `refine_mmd()` function at the bottom. Please also create a PR or an issue, so that I can fix the bug. Alternatively, if you can live with the error, you can export the note as tex from Mathpix and then run paper2speech on the tex file.
 
 ## Limitations (for PDFs)
 - only works for English

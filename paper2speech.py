@@ -59,7 +59,7 @@ def main():
         else:
             tex_to_html(args.input_file, out_path)
         process_html(args.output_file)
-        os.system(f"open {args.output_file}")
+        os.system(f'open "{args.output_file}"')
 
 
 if __name__ == "__main__":

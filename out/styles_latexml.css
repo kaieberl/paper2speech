@@ -74,6 +74,10 @@ body {
   --main-width: 40rem !important;
 }
 
+.ltx_page_main {
+  overflow: hidden;
+}
+
 .ltx_page_main >.ltx_TOC.active {
   display: none;
 }
