@@ -45,6 +45,7 @@ Files can be converted from pdf, mmd and tex to mp3 and html.
 paper2speech <input_file.pdf> -o <output_file.mp3>
 ```
 In case an error occurs in a later stage, you can invoke the command again on intermediately produced files (e.g. mmd).
+When converting to html, the output directory should be `out/` for correct linking of the css file.
 
 The Google cloud authentication json file should be in the `src` directory. It can be downloaded from the Google Cloud Console, as described [here](https://cloud.google.com/api-keys/docs/create-manage-api-keys).  
 TLDR: On [https://cloud.google.com](https://cloud.google.com), create a new project. In your project, in the upper right corner, click on the 3 dots > project settings > service accounts > choose one or create service account > create key > json > create.
