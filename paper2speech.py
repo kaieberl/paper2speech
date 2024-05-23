@@ -1,7 +1,6 @@
 import os
 import argparse
 import subprocess
-import sys
 
 from src.text_to_speech import merge_mp3_files, MP3Generator, refine_mmd
 from src.convert import mmd_to_tex, tex_to_html, process_html
@@ -13,17 +12,7 @@ def get_args():
     parser.add_argument('input_file', type=str, help='input file path. Can be a pdf, mmd or tex file.')
     parser.add_argument('-o', '--output_file', type=str, help='output file path. Either an mp3 or html file.')
     args = parser.parse_args()
-
-    if not os.path.isfile(args.input_file):
-        print(f'Input file {args.input_file} does not exist.')
-        sys.exit(1)
-    if not args.input_file.lower().endswith('.pdf') and not args.input_file.lower().endswith(
-            '.mmd') and not args.input_file.lower().endswith('.tex'):
-        print(f'Input file {args.input_file} is not a PDF, MMD or TEX file.')
-        sys.exit(1)
-    if not args.output_file.lower().endswith('.html') and not args.output_file.lower().endswith('.mp3'):
-        print('Output file has to be of type mp3 or html.')
-        sys.exit(1)
+    assert os.path.isfile(args.input_file), f'Input file {args.input_file} does not exist.'
     return args
 
 
@@ -31,8 +20,10 @@ def main():
     args = get_args()
 
     filename, file_extension = os.path.splitext(args.input_file)
+    assert file_extension.lower() in ['.pdf', '.mmd', '.tex'], f'Input file type {file_extension} not supported.'
     filename = os.path.basename(filename)
     _, file_type = os.path.splitext(args.output_file)
+    assert file_type.lower() in ['.mp3', '.html'], f'Output file type {file_type} not supported.'
     in_path = os.path.dirname(args.input_file)
     out_path = os.path.dirname(args.output_file)
     if not os.path.exists(out_path):

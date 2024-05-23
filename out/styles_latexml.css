@@ -106,10 +106,63 @@ h3 {
   padding-top: 0.4rem;
 }
 
-.ltx_section, .ltx_subsection, .ltx_subsubsection, .ltx_abstract {
+.ltx_section, .ltx_subsection, .ltx_subsubsection, .ltx_abstract, .ltx_paragraph, .ltx_appendix, .ltx_theorem {
   position: relative;
 }
 
 .ltx_figure img {
   background-color: white !important;
+}
+
+.explain-section-button, .start-chat-button {
+  position: absolute;
+  left: calc(-2rem - 30px);
+  line-height: 1 !important;
+  /*transform: translate(calc(-50% - 2rem), calc(-50% - 2rem));*/
+  /*margin-top: -2rem;*/
+  /*margin-bottom: -2rem;*/
+  height: 2rem;
+  width: 2rem;
+  font-size: 1rem;
+  border-radius: 50%;
+  text-align: center;
+  display: inline-block;
+  border: none;
+  outline: none;
+  cursor: pointer !important;
+  color: #fff;
+}
+
+.explain-section-button {
+  top: 0;
+  right: 0;
+  background-color: #1a73e8;
+  padding: 0.5rem 12px;
+}
+
+.start-chat-button {
+  background-color: #1a73e8;
+  position: fixed !important;
+}
+
+.loading {
+  display: flex;
+  position: absolute;
+  top: -4px;
+  left: -4px;
+  border: 4px solid #f3f3f3;
+  border-radius: calc(2rem + 4px);
+  border-top: 4px solid #1a73e8;
+  width: calc(2rem + 8px);
+  height: calc(2rem + 8px);
+  animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
