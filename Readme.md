@@ -29,7 +29,7 @@ The aim of this package is to make papers more accessible by converting them to 
 ## Installation
 Replace the `GEMMA_CPP_PATH` variable in `src/markdown_to_html.py` with the build path of your gemma executable. The tokenizer and model weights should be in the same directory.
 ```bash
-git clone git://github.com/kaieberl/paper2speech
+git clone git@github.com:kaieberl/paper2speech.git
 pip install .
 ```
 For conversion to html, additionally install:
